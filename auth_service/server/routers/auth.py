@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from fastapi import APIRouter, Request, status, Form, HTTPException, Depends
 from fastapi.responses import RedirectResponse
+from starlette.responses import JSONResponse
 from starlette.templating import Jinja2Templates
 from ..database import get_db_connection
 from ...utils.utils import create_access_token, verify_token
@@ -32,10 +33,6 @@ def autenticar_usuario(email, senha):
     else:
         return False, "USUARIO NAO ENCONTRADO"
 
-@router.get("/login")
-def login_get(request: Request):
-    context = {'request': request}
-    return templates.TemplateResponse('login.html', context)
 
 @router.post("/login")
 def login_post(request: Request, email: str = Form(...), senha: str = Form(...)):
@@ -46,9 +43,7 @@ def login_post(request: Request, email: str = Form(...), senha: str = Form(...))
         access_token = create_access_token(
             data={"sub": email_usuario}, expires_delta=access_token_expires
         )
-        response = RedirectResponse(url=f"/auth/index", status_code=status.HTTP_302_FOUND)
-        response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
-        return response
+        return JSONResponse(content={"access_token": access_token, "token_type": "bearer"})
     else:
         raise HTTPException(
             status_code=401,
@@ -56,10 +51,6 @@ def login_post(request: Request, email: str = Form(...), senha: str = Form(...))
             headers={"WWW-Authenticate": "Bearer"}
         )
 
-@router.get("/register")
-def register_get(request: Request):
-    context = {'request': request}
-    return templates.TemplateResponse('register.html', context)
 
 @router.post("/register")
 def register_post(request: Request, email: str = Form(...), senha: str = Form(...)):
@@ -77,17 +68,13 @@ def register_post(request: Request, email: str = Form(...), senha: str = Form(..
         raise HTTPException(status_code=400, detail="Erro ao registrar usuário.")
     cur.close()
     conn.close()
-    response = RedirectResponse(url=f"/auth/login", status_code=status.HTTP_302_FOUND)
-    return response
+    return JSONResponse(content={"message": "Usuário registrado com sucesso"})
 
-@router.get("/index")
-def dashboard(request: Request):
-    token = request.cookies.get("access_token")
-    if not token:
-        raise HTTPException(status_code=401, detail="Não autorizado")
-    payload = verify_token(token.split(" ")[1])
-    if not payload:
-        raise HTTPException(status_code=401, detail="Não autorizado")
-    email_usuario = payload.get("sub")
-    context = {'request': request, 'email': email_usuario}
-    return {"Eita, deu certo!"}
+
+@router.post("/verify_token")
+def verify_token_endpoint(token: str = Form(...)):
+    payload = verify_token(token)
+    if payload:
+        return JSONResponse(content=payload)
+    else:
+        raise HTTPException(status_code=401, detail="Token inválido")
