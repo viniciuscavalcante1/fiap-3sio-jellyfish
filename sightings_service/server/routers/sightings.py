@@ -1,6 +1,5 @@
-from fastapi import APIRouter, Form, UploadFile, File, HTTPException
+from fastapi import APIRouter, Form, UploadFile, File, HTTPException, Depends, Header
 from ..database import get_db_connection
-from psycopg2.extras import RealDictCursor
 from datetime import datetime
 import uuid
 import os
@@ -8,16 +7,12 @@ import requests
 
 router = APIRouter()
 
-def get_animals():
-    response = requests.get("http://localhost:8003/animals/animals")
+def verify_token(token: str):
+    response = requests.post("http://localhost:8000/auth/verify_token", data={"token": token})
     if response.status_code == 200:
         return response.json()
     else:
-        raise HTTPException(status_code=500, detail="Erro ao buscar dados dos animais")
-
-@router.get("/animals", response_model=list)
-def fetch_animals():
-    return get_animals()
+        raise HTTPException(status_code=401, detail="Não autorizado.")
 
 @router.post("/sightings")
 async def create_sighting(
@@ -25,8 +20,13 @@ async def create_sighting(
     latitude: float = Form(...),
     longitude: float = Form(...),
     date_time: datetime = Form(...),
-    photo: UploadFile = File(None)
+    photo: UploadFile = File(None),
+    authorization: str = Header(...)
 ):
+    token = authorization.split(" ")[1]
+    payload = verify_token(token)
+    user_id = payload.get("sub")
+
     photo_url = None
     if photo:
         photo_filename = f"{uuid.uuid4()}.jpg"
@@ -38,9 +38,9 @@ async def create_sighting(
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("""
-        INSERT INTO sightings (animal_id, latitude, longitude, date_time, photo_url)
-        VALUES (%s, %s, %s, %s, %s)
-    """, (animal_id, latitude, longitude, date_time, photo_url))
+        INSERT INTO sightings (animal_id, latitude, longitude, date_time, photo_url, user_id)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """, (animal_id, latitude, longitude, date_time, photo_url, user_id))
     conn.commit()
     cur.close()
     conn.close()

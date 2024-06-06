@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request, status, Form, HTTPException, Depends
 from starlette.responses import RedirectResponse
 from starlette.templating import Jinja2Templates
-from requests import post
+from requests import post, get
 
 SECRET_KEY = "jellyfish"
 ALGORITHM = "HS256"
@@ -32,15 +32,32 @@ def dashboard(request: Request):
 
 
 @router.get("/register_sighting")
-def register_sighting(request: Request):
+def register_sighting_get(request: Request):
+    print("Teste")
     token = request.cookies.get("access_token")
+    print(token)
     if not token:
+        print("not token")
         raise HTTPException(status_code=401, detail="Não autorizado")
     payload = verify_token(token.split(" ")[1])
+    print("payload:")
+    print(payload)
     if not payload:
+        print("not payload :(")
         raise HTTPException(status_code=401, detail="Não autorizado")
-    email_usuario = payload.get("sub")
-    context = {'request': request, 'email': email_usuario}
+
+    user_id = payload.get("sub")
+    animals_response = get("http://localhost:8003/animals/animals")
+    if animals_response.status_code != 200:
+        raise HTTPException(status_code=500, detail="Erro ao buscar dados dos animais")
+
+    animals = animals_response.json()
+
+    context = {
+        'request': request,
+        'user_id': user_id,
+        'animals': animals
+    }
     return templates.TemplateResponse('register_sighting.html', context)
 
 

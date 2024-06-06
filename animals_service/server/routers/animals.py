@@ -5,7 +5,7 @@ from psycopg2.extras import RealDictCursor
 
 router = APIRouter()
 
-@router.get("/animals", response_model=list[Animal])
+@router.get("/animals")
 def get_animals():
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)

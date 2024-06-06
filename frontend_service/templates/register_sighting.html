@@ -4,11 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Avistamento</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+        .form-container {
+            margin-top: 20px;
+        }
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-container label, .form-container input, .form-container select, .form-container button {
+            margin: 5px 0;
+        }
+        .animal-option {
+            display: flex;
+            align-items: center;
+        }
+        .animal-option img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
     <h1>Registrar Avistamento</h1>
-    <form method="post" action="/sightings/register">
-    </form>
-    <button onclick="location.href='/dashboard'">Voltar ao Dashboard</button>
+    <div id="map"></div>
+    <div class="form-container">
+        <form method="post" action="/sightings/sightings" enctype="multipart/form-data">
+            <label for="animal">Animal:</label>
+            <select id="animal" name="animal_id">
+                {% for animal in animals %}
+                    <option value="{{ animal.id }}">
+                        <div class="animal-option">
+                            <img src="{{ animal.photo_url }}" alt="{{ animal.name }}">
+                            <span>{{ animal.name }}</span> - <span>{{ animal.description }}</span>
+                        </div>
+                    </option>
+                {% endfor %}
+            </select>
+            <label for="latitude">Latitude:</label>
+            <input type="text" id="latitude" name="latitude" readonly>
+            <label for="longitude">Longitude:</label>
+            <input type="text" id="longitude" name="longitude" readonly>
+            <label for="date_time">Data e Hora:</label>
+            <input type="text" id="date_time" name="date_time" readonly>
+            <label for="user_id">ID do Usuário:</label>
+            <input type="text" id="user_id" name="user_id" value="{{ user_id }}" readonly>
+            <label for="photo">Foto:</label>
+            <input type="file" id="photo" name="photo">
+            <button type="submit">Registrar</button>
+        </form>
+    </div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                document.getElementById('latitude').value = lat;
+                document.getElementById('longitude').value = lon;
+                document.getElementById('date_time').value = new Date().toISOString();
+                const map = L.map('map').setView([lat, lon], 13);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+                L.marker([lat, lon]).addTo(map)
+                    .bindPopup('Você está aqui.')
+                    .openPopup();
+            }, function (error) {
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        alert("Usuário negou a solicitação de geolocalização.");
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        alert("Informação de localização não está disponível.");
+                        break;
+                    case error.TIMEOUT:
+                        alert("A solicitação de localização expirou.");
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        alert("Um erro desconhecido ocorreu.");
+                        break;
+                }
+            });
+        });
+    </script>
 </body>
 </html>
