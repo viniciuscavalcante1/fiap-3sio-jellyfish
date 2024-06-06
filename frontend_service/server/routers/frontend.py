@@ -31,6 +31,45 @@ def dashboard(request: Request):
     return templates.TemplateResponse('dashboard.html', context)
 
 
+@router.get("/register_sighting")
+def register_sighting(request: Request):
+    token = request.cookies.get("access_token")
+    if not token:
+        raise HTTPException(status_code=401, detail="Não autorizado")
+    payload = verify_token(token.split(" ")[1])
+    if not payload:
+        raise HTTPException(status_code=401, detail="Não autorizado")
+    email_usuario = payload.get("sub")
+    context = {'request': request, 'email': email_usuario}
+    return templates.TemplateResponse('register_sighting.html', context)
+
+
+@router.get("/report_threat")
+def register_sighting(request: Request):
+    token = request.cookies.get("access_token")
+    if not token:
+        raise HTTPException(status_code=401, detail="Não autorizado")
+    payload = verify_token(token.split(" ")[1])
+    if not payload:
+        raise HTTPException(status_code=401, detail="Não autorizado")
+    email_usuario = payload.get("sub")
+    context = {'request': request, 'email': email_usuario}
+    return templates.TemplateResponse('register_sighting.html', context)
+
+
+@router.get("/request_rescue")
+def register_sighting(request: Request):
+    token = request.cookies.get("access_token")
+    if not token:
+        raise HTTPException(status_code=401, detail="Não autorizado")
+    payload = verify_token(token.split(" ")[1])
+    if not payload:
+        raise HTTPException(status_code=401, detail="Não autorizado")
+    email_usuario = payload.get("sub")
+    context = {'request': request, 'email': email_usuario}
+    return templates.TemplateResponse('register_sighting.html', context)
+
+
 @router.get("/login")
 def login_get(request: Request):
     context = {'request': request}
