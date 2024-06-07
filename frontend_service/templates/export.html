@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exportar Dados</title>
+    <style>
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .button {
+            margin: 10px;
+            padding: 15px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 9px #999;
+        }
+        .button:hover {background-color: #3e8e41}
+        .button:active {
+            background-color: #3e8e41;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Exportar Dados</h1>
+        <button class="button" onclick="exportData('sightings')">Exportar Avistamentos</button>
+        <button class="button" onclick="exportData('rescues')">Exportar Resgates</button>
+        <button class="button" onclick="exportData('threats')">Exportar Ameaças</button>
+        <div id="message" class="message"></div>
+        <a href="/dashboard" class="button">Voltar ao Dashboard</a>
+    </div>
+    <script>
+        async function exportData(type) {
+            let url = '';
+            switch(type) {
+                case 'sightings':
+                    url = 'http://localhost:8002/sightings/export';
+                    break;
+                case 'rescues':
+                    url = 'http://localhost:8004/rescue/export';
+                    break;
+                case 'threats':
+                    url = 'http://localhost:8005/threat_reports/export';
+                    break;
+                default:
+                    return;
+            }
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                downloadCSV(data, type);
+            } catch (error) {
+                console.error('There has been a problem with your fetch operation:', error);
+                document.getElementById('message').textContent = `Erro ao exportar ${type}.`;
+            }
+        }
+
+        function downloadCSV(data, type) {
+            const csv = convertToCSV(data);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `${type}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function convertToCSV(objArray) {
+            const array = typeof objArray !== 'object' ? JSON.parse(objArray) : objArray;
+            let str = '';
+            let line = '';
+
+            if (array.length === 0) {
+                return '';
+            }
+
+            const keys = Object.keys(array[0]);
+            line = keys.join(',');
+            str += line + '\r\n';
+
+            array.forEach(item => {
+                line = '';
+                keys.forEach(key => {
+                    if (line !== '') line += ',';
+                    line += item[key];
+                });
+                str += line + '\r\n';
+            });
+
+            return str;
+        }
+    </script>
+</body>
+</html>

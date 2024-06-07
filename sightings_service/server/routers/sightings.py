@@ -47,3 +47,14 @@ async def create_sighting(
     cur.close()
     conn.close()
     return {"message": "Sighting registered successfully"}
+
+
+@router.get("/export")
+async def export_sightings():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM sightings")
+    sightings = cur.fetchall()
+    cur.close()
+    conn.close()
+    return sightings

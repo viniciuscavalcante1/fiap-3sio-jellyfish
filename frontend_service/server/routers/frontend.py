@@ -123,3 +123,8 @@ def register_post(request: Request, email: str = Form(...), senha: str = Form(..
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
     else:
         raise HTTPException(status_code=400, detail="Erro ao registrar usuário")
+
+
+@router.get("/export")
+async def get_export_data(request: Request):
+    return templates.TemplateResponse("export.html", {"request": request})

@@ -58,3 +58,14 @@ async def get_rescue_requests():
     cur.close()
     conn.close()
     return requests
+
+
+@router.get("/export")
+async def export_rescue_requests():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM rescue_requests")
+    rescues = cur.fetchall()
+    cur.close()
+    conn.close()
+    return rescues

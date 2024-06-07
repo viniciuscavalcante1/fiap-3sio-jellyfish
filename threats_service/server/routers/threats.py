@@ -58,3 +58,14 @@ async def get_threat_reports():
     cur.close()
     conn.close()
     return reports
+
+
+@router.get("/export")
+async def export_threat_reports():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM threat_reports")
+    threats = cur.fetchall()
+    cur.close()
+    conn.close()
+    return threats
