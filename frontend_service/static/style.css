@@ -24,6 +24,7 @@ h1, h2, h3 {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Alinhar texto ao centro */
 }
 
 button, .button {
@@ -63,41 +64,11 @@ button:hover::before, .button:hover::before {
     left: 100%;
 }
 
-#map {
-    height: 400px;
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-.form-container {
+.cards-container {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
     align-items: center;
-}
-
-.form-container form {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    align-items: center;
-}
-
-.form-container label,
-.form-container input,
-.form-container textarea,
-.form-container select,
-.form-container button {
-    margin: 10px 0; /* Ajuste a margem para adicionar espaçamento */
-    width: 100%;
-    max-width: 400px;
-}
-
-.form-container input,
-.form-container textarea,
-.form-container select {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
 }
 
 .card {
@@ -107,7 +78,7 @@ button:hover::before, .button:hover::before {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 10px;
     padding: 20px;
-    width: 300px;
+    width: calc(50% - 40px); /* Ajusta o tamanho dos cards para ocupar 50% da largura menos a margem */
     text-align: center;
     transition: transform 0.2s;
 }
