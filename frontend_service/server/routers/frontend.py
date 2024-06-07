@@ -128,3 +128,30 @@ def register_post(request: Request, email: str = Form(...), senha: str = Form(..
 @router.get("/export")
 async def get_export_data(request: Request):
     return templates.TemplateResponse("export.html", {"request": request})
+
+
+@router.get("/learn")
+async def get_education(request: Request):
+    articles = [
+        {
+            "title": "Como identificar os seres marinhos",
+            "description": "Aprenda a identificar diferentes espécies marinhas.",
+            "link": "https://www.oceanopedia.com.br/l/como-identificar-os-seres-marinhos/"
+        },
+        {
+            "title": "Procedimentos de resgate de animais marinhos",
+            "description": "Saiba o que fazer quando encontrar animais marinhos encalhados ou machucados.",
+            "link": "https://iema.es.gov.br/Not%C3%ADcia/saiba-o-que-fazer-quando-encontrar-animais-marinhos-encalhados-ou-machucados"
+        },
+        {
+            "title": "Espécies marinhas em risco de extinção",
+            "description": "Conheça 5 animais marinhos ameaçados de extinção.",
+            "link": "https://www.nationalgeographicbrasil.com/animais/2023/06/conheca-5-animais-marinhos-ameacados-de-extincao"
+        },
+        {
+            "title": "Como reduzir a poluição nos oceanos",
+            "description": "4 formas de colaborar com o fim da poluição nos oceanos.",
+            "link": "https://umsoplaneta.globo.com/patrocinado/natura/noticia/2022/01/13/4-formas-de-colaborar-com-o-fim-da-poluicao-nos-oceanos.ghtml"
+        }
+    ]
+    return templates.TemplateResponse("learn.html", {"request": request, "articles": articles})
