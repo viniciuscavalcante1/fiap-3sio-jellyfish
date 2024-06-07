@@ -1,34 +1,31 @@
-/* Importando a fonte Poppins do Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
-/* Estilos globais */
 body {
     font-family: 'Poppins', Arial, sans-serif;
     margin: 0;
     padding: 0;
     background: url('/static/images/sea-pattern.png') repeat;
-    background-size: 300px; /* Ajustar o tamanho da textura */
-    background-attachment: fixed; /* Fixar o fundo para criar um efeito de profundidade */
+    background-size: 300px;
+    background-attachment: fixed;
 }
 
 h1, h2, h3 {
     color: #01CFCD;
     text-align: center;
-    font-size: 15px;
+    font-size: 24px;
 }
 
 .container {
-    max-width: 800px; /* Ajuste para maior largura */
+    max-width: 800px;
     margin: 20px auto;
-    background-color: rgba(255, 255, 255, 1); /* Fundo semi-transparente */
+    background-color: rgba(255, 255, 255, 1);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center; /* Alinhar texto ao centro */
 }
 
 button, .button {
-    background: linear-gradient(45deg, #01CFCD, #019B9B);
+    background-color: #01CFCD;
     color: #ffffff;
     border: none;
     padding: 10px 20px;
@@ -37,38 +34,47 @@ button, .button {
     cursor: pointer;
     font-size: 16px;
     font-weight: 600;
-    position: relative;
-    overflow: hidden;
-    transition: background 1s ease, transform 1s ease, box-shadow 1s ease;
-    text-decoration: none; /* Remover sublinhado */
-    display: inline-block; /* Garantir que o link seja exibido como botão */
+    transition: all 0.3s ease;
 }
 
 button:hover, .button:hover {
-    background: linear-gradient(45deg, #019B9B, #01CFCD);
+    background-color: #019B9B;
 }
 
-button::before, .button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -75%;
-    width: 200%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.2);
-    transform: skewX(-25deg);
-    transition: left 1s ease;
+button:active, .button:active {
+    background-color: #017A7A;
+    transform: translateY(2px);
 }
 
-button:hover::before, .button:hover::before {
-    left: 100%;
+#map {
+    height: 400px;
+    width: 100%;
+    margin-bottom: 20px;
 }
 
-.cards-container {
+.form-container {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center; /* Centralizar cards horizontalmente */
-    align-items: center; /* Centralizar cards verticalmente */
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-container label,
+.form-container input,
+.form-container select,
+.form-container button,
+.form-container textarea {
+    margin: 5px 0;
+    width: 100%;
+    max-width: 400px;
+    display: block;
+}
+
+.form-container input,
+.form-container select,
+.form-container textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 .card {
@@ -78,8 +84,7 @@ button:hover::before, .button:hover::before {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 10px;
     padding: 20px;
-    width: 80%; /* Ajusta o tamanho dos cards para ocupar 80% da largura menos a margem */
-    max-width: 600px; /* Ajuste para evitar que os cards fiquem muito largos */
+    width: 300px;
     text-align: center;
     transition: transform 0.2s;
 }
@@ -126,4 +131,16 @@ button:hover::before, .button:hover::before {
     background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 8px;
+}
+
+.logo {
+    display: block;
+    margin: 0 auto 20px auto;
+    width: 150px;
+}
+
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
