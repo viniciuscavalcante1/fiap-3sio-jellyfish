@@ -1,7 +1,14 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
+
 def get_db_connection():
+    """
+    Estabelece uma conexão com o banco de dados PostgreSQL.
+
+    Returns:
+        psycopg2.extensions.connection: Uma conexão com o banco de dados PostgreSQL.
+    """
     conn = psycopg2.connect(
         host="localhost",
         database="sightings",
@@ -10,7 +17,11 @@ def get_db_connection():
     )
     return conn
 
+
 def create_tables():
+    """
+    Cria a tabela "sightings" no banco de dados, se ainda não existir.
+    """
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("""
@@ -29,4 +40,5 @@ def create_tables():
     conn.close()
 
 
+# Chama a função create_tables para criar a tabela "sightings" se ainda não existir
 create_tables()
