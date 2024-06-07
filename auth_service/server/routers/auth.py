@@ -1,7 +1,7 @@
 from datetime import timedelta, datetime
 
 from fastapi import APIRouter, Request, status, Form, HTTPException, Depends
-from fastapi.responses import RedirectResponse, JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from starlette.templating import Jinja2Templates
 from ..database import get_db_connection
 from ...utils.utils import create_access_token, verify_token
@@ -15,8 +15,17 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 router = APIRouter()
 templates = Jinja2Templates(directory='templates')
 
-
 def autenticar_usuario(email, senha):
+    """
+    Verifica se o email e a senha fornecidos correspondem a um usuário no banco de dados.
+
+    Args:
+        email (str): O email do usuário.
+        senha (str): A senha do usuário.
+
+    Returns:
+        Tuple[bool, Union[str, None]]: Uma tupla indicando se a autenticação foi bem-sucedida e uma mensagem opcional de erro.
+    """
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
     cur.execute("SELECT * FROM users WHERE email = %s", (email,))
@@ -32,9 +41,19 @@ def autenticar_usuario(email, senha):
     else:
         return False, "USUARIO NAO ENCONTRADO"
 
-
 @router.post("/login")
 def login_post(request: Request, email: str = Form(...), senha: str = Form(...)):
+    """
+    Autentica um usuário com o email e senha fornecidos e retorna um token de acesso JWT válido.
+
+    Args:
+        request (Request): O objeto de requisição HTTP.
+        email (str): O email do usuário.
+        senha (str): A senha do usuário.
+
+    Returns:
+        JSONResponse: Uma resposta HTTP contendo o token de acesso JWT no corpo e configurado como um cookie.
+    """
     usuario_autenticado, email_usuario = autenticar_usuario(email, senha)
     if usuario_autenticado:
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -51,9 +70,19 @@ def login_post(request: Request, email: str = Form(...), senha: str = Form(...))
             headers={"WWW-Authenticate": "Bearer"}
         )
 
-
 @router.post("/register")
 def register_post(request: Request, email: str = Form(...), senha: str = Form(...)):
+    """
+    Registra um novo usuário com o email e senha fornecidos.
+
+    Args:
+        request (Request): O objeto de requisição HTTP.
+        email (str): O email do usuário.
+        senha (str): A senha do usuário.
+
+    Returns:
+        JSONResponse: Uma resposta HTTP indicando sucesso ou erro no registro.
+    """
     hash_password = hashlib.md5(senha.encode()).hexdigest()
     conn = get_db_connection()
     cur = conn.cursor()
@@ -70,18 +99,34 @@ def register_post(request: Request, email: str = Form(...), senha: str = Form(..
     conn.close()
     return JSONResponse(content={"message": "Usuário registrado com sucesso"})
 
-
 @router.post("/verify_token")
 def verify_token_endpoint(token: str = Form(...)):
+    """
+    Rota para verificar a validade de um token de acesso JWT.
+
+    Args:
+        token (str): O token JWT a ser verificado.
+
+    Returns:
+        JSONResponse: Uma resposta HTTP contendo o payload do token se for válido, caso contrário, um erro.
+    """
     payload = verify_token(token)
     if payload:
         return JSONResponse(content=payload)
     else:
         raise HTTPException(status_code=401, detail="Token inválido")
 
-
 @router.post("/get_user_id")
 def get_user_id(email: str = Form(...)):
+    """
+    Rota para obter o ID de um usuário com base no email.
+
+    Args:
+        email (str): O email do usuário.
+
+    Returns:
+        JSONResponse: Uma resposta HTTP contendo o ID do usuário se encontrado, caso contrário, um erro.
+    """
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
     cur.execute("SELECT id FROM users WHERE email = %s", (email,))
