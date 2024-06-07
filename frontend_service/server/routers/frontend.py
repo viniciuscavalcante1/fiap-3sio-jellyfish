@@ -155,3 +155,30 @@ async def get_education(request: Request):
         }
     ]
     return templates.TemplateResponse("learn.html", {"request": request, "articles": articles})
+
+
+@router.get("/support")
+async def get_support(request: Request):
+    organizations = [
+        {
+            "name": "A Voz dos Oceanos",
+            "description": "A Voz dos Oceanos é um movimento mundial de combate à poluição plástica.",
+            "link": "https://voiceoftheoceans.com/"
+        },
+        {
+            "name": "Sea Shepherd",
+            "description": "A Sea Shepherd defende, conserva e protege a vida e os habitats marinhos.",
+            "link": "https://seashepherd.org.br/"
+        },
+        {
+            "name": "Instituto Gremar",
+            "description": "O Instituto Gremar é uma organização focada no resgate de animais marinhos.",
+            "link": "https://gremar.org.br/"
+        },
+        {
+            "name": "Fundação Mamíferos Aquáticos",
+            "description": "A Fundação Mamíferos Aquáticos trabalha conservar os mamíferos aquáticos e seus habitats.",
+            "link": "https://mamiferosaquaticos.org.br/"
+        },
+    ]
+    return templates.TemplateResponse("support.html", {"request": request, "organizations": organizations})
