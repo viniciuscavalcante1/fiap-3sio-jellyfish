@@ -1,7 +1,7 @@
 import psycopg2
-from psycopg2.extras import RealDictCursor
 
 def get_db_connection():
+    """Função para estabelecer uma conexão com o banco de dados PostgreSQL no microsserviço animals_service"""
     conn = psycopg2.connect(
         host="localhost",
         database="animals",
@@ -11,6 +11,7 @@ def get_db_connection():
     return conn
 
 def create_tables():
+    """Função para criar a tabela animals no banco de dados se ela não existir"""
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("""
@@ -26,6 +27,7 @@ def create_tables():
     conn.close()
 
 def insert_initial_data():
+    """Função para inserir dados iniciais na tabela animals"""
     conn = get_db_connection()
     cur = conn.cursor()
     animals = [
