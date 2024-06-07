@@ -18,7 +18,7 @@ h1, h2, h3 {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 800px; /* Ajuste para maior largura */
     margin: 20px auto;
     background-color: rgba(255, 255, 255, 1); /* Fundo semi-transparente */
     padding: 20px;
@@ -67,8 +67,8 @@ button:hover::before, .button:hover::before {
 .cards-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
+    justify-content: center; /* Centralizar cards horizontalmente */
+    align-items: center; /* Centralizar cards verticalmente */
 }
 
 .card {
@@ -78,7 +78,8 @@ button:hover::before, .button:hover::before {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 10px;
     padding: 20px;
-    width: calc(50% - 40px); /* Ajusta o tamanho dos cards para ocupar 50% da largura menos a margem */
+    width: 80%; /* Ajusta o tamanho dos cards para ocupar 80% da largura menos a margem */
+    max-width: 600px; /* Ajuste para evitar que os cards fiquem muito largos */
     text-align: center;
     transition: transform 0.2s;
 }
