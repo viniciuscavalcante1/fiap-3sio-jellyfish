@@ -5,32 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="/static/style.css?v=1">
     <style>
-        #map {
-            height: 400px;
-            width: 100%;
-        }
-        .btn-container {
-            margin-top: 20px;
-        }
-        .btn-container button {
-            margin: 5px;
-            padding: 10px;
-            font-size: 16px;
+        .logo {
+            display: block;
+            margin: 0 auto 0px auto;
+            width: 80px;
         }
     </style>
 </head>
 <body>
-    <h1>Bem-vindo, {{ email }}!</h1>
-    <div id="map"></div>
-    <div class="btn-container">
-        <button onclick="location.href='/register_sighting'">Registrar Avistamento</button>
-        <button onclick="location.href='/request_rescue'">Solicitar Resgate</button>
-        <button onclick="location.href='/report_threat'">Reportar Ameaça</button>
-        <button onclick="location.href='/export'">Exportar Dados</button>
-        <button onclick="location.href='/learn'">Aprender</button>
-        <button onclick="location.href='/support'">Apoiar</button>
-
+    <div class="container">
+        <img src="/static/images/jellyfish-logo.png" alt="Jellyfish Logo" class="logo">
+        <h1>Bem-vindo, {{ email }}!</h1>
+        <div id="map"></div>
+        <div class="btn-container">
+            <button onclick="location.href='/register_sighting'">Registrar Avistamento</button>
+            <button onclick="location.href='/request_rescue'">Solicitar Resgate</button>
+            <button onclick="location.href='/report_threat'">Reportar Ameaça</button>
+            <button onclick="location.href='/export'">Exportar Dados</button>
+            <button onclick="location.href='/learn'">Aprender</button>
+            <button onclick="location.href='/support'">Apoiar</button>
+        </div>
     </div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
