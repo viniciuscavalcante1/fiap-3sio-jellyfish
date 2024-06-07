@@ -4,35 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exportar Dados</title>
-    <style>
-        .container {
-            text-align: center;
-            margin-top: 50px;
-        }
-        .button {
-            margin: 10px;
-            padding: 15px 25px;
-            font-size: 16px;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            outline: none;
-            color: #fff;
-            background-color: #4CAF50;
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 9px #999;
-        }
-        .button:hover {background-color: #3e8e41}
-        .button:active {
-            background-color: #3e8e41;
-            box-shadow: 0 5px #666;
-            transform: translateY(4px);
-        }
-    </style>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <div class="container">
+        <img src="/static/images/jellyfish-logo.png" alt="Jellyfish Logo" class="logo">
         <h1>Exportar Dados</h1>
         <button class="button" onclick="exportData('sightings')">Exportar Avistamentos</button>
         <button class="button" onclick="exportData('rescues')">Exportar Resgates</button>

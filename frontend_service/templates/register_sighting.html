@@ -5,59 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Avistamento</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <style>
-        #map {
-            height: 400px;
-            width: 100%;
-        }
-        .form-container {
-            margin-top: 20px;
-        }
-        .form-container form {
-            display: flex;
-            flex-direction: column;
-        }
-        .form-container label, .form-container input, .form-container select, .form-container button {
-            margin: 5px 0;
-        }
-        .animal-option {
-            display: flex;
-            align-items: center;
-        }
-        .animal-option img {
-            width: 50px;
-            height: 50px;
-            margin-right: 10px;
+    <link rel="stylesheet" href="/static/style.css">
+            <style>
+        .logo {
+            display: block;
+            margin: 0 auto 0px auto;
+            width: 100px;
         }
     </style>
 </head>
 <body>
-    <h1>Registrar Avistamento</h1>
-    <div id="map"></div>
-    <div class="form-container">
-        <form id="sighting-form" enctype="multipart/form-data">
-            <label for="animal">Animal:</label>
-            <select id="animal" name="animal_id">
-                {% for animal in animals %}
-                    <option value="{{ animal.id }}">
-                        {{ animal.name }} - {{ animal.description }}
-                    </option>
-                {% endfor %}
-            </select>
-            <label for="latitude">Latitude:</label>
-            <input type="text" id="latitude" name="latitude" readonly>
-            <label for="longitude">Longitude:</label>
-            <input type="text" id="longitude" name="longitude" readonly>
-            <label for="date_time">Data e Hora:</label>
-            <input type="text" id="date_time" name="date_time" readonly>
-            <label for="user_email">E-mail do Usuário:</label>
-            <input type="text" id="user_email" name="user_email" value="{{ user_id }}" readonly>
-            <label for="photo">Foto:</label>
-            <input type="file" id="photo" name="photo">
-            <button type="submit">Registrar</button>
-        </form>
+    <div class="container">
+        <img src="/static/images/jellyfish-logo.png" alt="Jellyfish Logo" class="logo">
+        <h1>Registrar Avistamento</h1>
+        <div id="map"></div>
+        <div class="form-container">
+            <form id="sighting-form" enctype="multipart/form-data">
+                <label for="animal">Animal:</label>
+                <select id="animal" name="animal_id">
+                    {% for animal in animals %}
+                        <option value="{{ animal.id }}">
+                            {{ animal.name }} - {{ animal.description }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <label for="latitude">Latitude:</label>
+                <input type="text" id="latitude" name="latitude" readonly>
+                <label for="longitude">Longitude:</label>
+                <input type="text" id="longitude" name="longitude" readonly>
+                <label for="date_time">Data e Hora:</label>
+                <input type="text" id="date_time" name="date_time" readonly>
+                <label for="user_email">E-mail do Usuário:</label>
+                <input type="text" id="user_email" name="user_email" value="{{ user_id }}" readonly>
+                <label for="photo">Foto:</label>
+                <input type="file" id="photo" name="photo">
+                <button type="submit">Registrar</button>
+            </form>
             <div id="message" class="message"></div>
-        <a href="/dashboard" class="button">Voltar ao Dashboard</a>
+            <a href="/dashboard" class="button">Voltar ao Dashboard</a>
+        </div>
     </div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>

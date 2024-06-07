@@ -5,58 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitar Resgate</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <style>
-        #map {
-            height: 400px;
-            width: 100%;
-        }
-        .form-container {
-            margin-top: 20px;
-        }
-        .form-container form {
-            display: flex;
-            flex-direction: column;
-        }
-        .form-container label, .form-container input, .form-container textarea, .form-container select, .form-container button {
-            margin: 5px 0;
-        }
-        .emergency-contact {
-            margin: 10px 0;
+    <link rel="stylesheet" href="/static/style.css">
+            <style>
+        .logo {
+            display: block;
+            margin: 0 auto 0px auto;
+            width: 100px;
         }
     </style>
 </head>
 <body>
-    <h1>Solicitar Resgate</h1>
-    <div class="emergency-contact">
-        <button onclick="window.location.href='tel:199'">Ligar para Guarda Costeira (199)</button>
-    </div>
-    <div id="map"></div>
-    <div class="form-container">
-        <form id="rescue-form" enctype="multipart/form-data">
-            <label for="animal_type">Tipo de Animal:</label>
-            <select id="animal_type" name="animal_type" required>
-                <option value="Golfinho">Golfinho</option>
-                <option value="Tartaruga">Tartaruga</option>
-                <option value="Foca">Foca</option>
-                <option value="Baleia">Baleia</option>
-                <option value="Outro">Outro</option>
-            </select>
-            <label for="latitude">Latitude:</label>
-            <input type="text" id="latitude" name="latitude" readonly>
-            <label for="longitude">Longitude:</label>
-            <input type="text" id="longitude" name="longitude" readonly>
-            <label for="date_time">Data e Hora:</label>
-            <input type="text" id="date_time" name="date_time" readonly>
-            <label for="description">Descrição:</label>
-            <textarea id="description" name="description" required></textarea>
-            <label for="user_email">Email do Usuário:</label>
-            <input type="text" id="user_email" name="user_email" value="{{ email }}" readonly>
-            <label for="photo">Foto:</label>
-            <input type="file" id="photo" name="photo">
-            <button type="submit">Solicitar Resgate</button>
-        </form>
-        <a href="/dashboard" class="button">Voltar ao Dashboard</a>
-
+    <div class="container">
+        <img src="/static/images/jellyfish-logo.png" alt="Jellyfish Logo" class="logo">
+        <h1>Solicitar Resgate</h1>
+        <div class="emergency-contact">
+            <button class="button" onclick="window.location.href='tel:199'">Ligar para Guarda Costeira (199)</button>
+        </div>
+        <div id="map"></div>
+        <div class="form-container">
+            <form id="rescue-form" enctype="multipart/form-data">
+                <label for="animal_type">Tipo de Animal:</label>
+                <select id="animal_type" name="animal_type" required>
+                    <option value="Golfinho">Golfinho</option>
+                    <option value="Tartaruga">Tartaruga</option>
+                    <option value="Foca">Foca</option>
+                    <option value="Baleia">Baleia</option>
+                    <option value="Outro">Outro</option>
+                </select>
+                <label for="latitude">Latitude:</label>
+                <input type="text" id="latitude" name="latitude" readonly>
+                <label for="longitude">Longitude:</label>
+                <input type="text" id="longitude" name="longitude" readonly>
+                <label for="date_time">Data e Hora:</label>
+                <input type="text" id="date_time" name="date_time" readonly>
+                <label for="description">Descrição:</label>
+                <textarea id="description" name="description" required></textarea>
+                <label for="user_email">Email do Usuário:</label>
+                <input type="text" id="user_email" name="user_email" value="{{ email }}" readonly>
+                <label for="photo">Foto:</label>
+                <input type="file" id="photo" name="photo">
+                <button type="submit">Solicitar Resgate</button>
+            </form>
+            <a href="/dashboard" class="button">Voltar ao Dashboard</a>
+        </div>
     </div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>

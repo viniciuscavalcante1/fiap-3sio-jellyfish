@@ -1,12 +1,14 @@
+/* Importando a fonte Poppins do Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
+/* Estilos globais */
 body {
     font-family: 'Poppins', Arial, sans-serif;
     margin: 0;
     padding: 0;
     background: url('/static/images/sea-pattern.png') repeat;
-    background-size: 300px;
-    background-attachment: fixed;
+    background-size: 300px; /* Ajustar o tamanho da textura */
+    background-attachment: fixed; /* Fixar o fundo para criar um efeito de profundidade */
 }
 
 h1, h2, h3 {
@@ -37,6 +39,8 @@ button, .button {
     position: relative;
     overflow: hidden;
     transition: background 1s ease, transform 1s ease, box-shadow 1s ease;
+    text-decoration: none; /* Remover sublinhado */
+    display: inline-block; /* Garantir que o link seja exibido como botão */
 }
 
 button:hover, .button:hover {
@@ -71,16 +75,25 @@ button:hover::before, .button:hover::before {
     align-items: center;
 }
 
+.form-container form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+
 .form-container label,
 .form-container input,
+.form-container textarea,
 .form-container select,
 .form-container button {
-    margin: 5px 0;
+    margin: 10px 0; /* Ajuste a margem para adicionar espaçamento */
     width: 100%;
     max-width: 400px;
 }
 
 .form-container input,
+.form-container textarea,
 .form-container select {
     padding: 10px;
     border: 1px solid #ccc;
