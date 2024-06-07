@@ -96,8 +96,7 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        alert('Relatório de ameaça registrado com sucesso!');
-                        form.reset();
+                        window.location.href = '/success';
                     } else {
                         return response.json().then(data => {
                             console.error('Erro:', data);

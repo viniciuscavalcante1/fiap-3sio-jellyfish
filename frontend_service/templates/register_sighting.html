@@ -56,6 +56,8 @@
             <input type="file" id="photo" name="photo">
             <button type="submit">Registrar</button>
         </form>
+            <div id="message" class="message"></div>
+        <a href="/dashboard" class="button">Voltar ao Dashboard</a>
     </div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
@@ -92,9 +94,8 @@
                 }
             });
 
-            // Intercepta o envio do formulário
             document.getElementById('sighting-form').addEventListener('submit', function(event) {
-                event.preventDefault(); // Impede o envio padrão do formulário
+                event.preventDefault();
                 console.log("Formulário submetido");
 
                 const form = event.target;
@@ -106,18 +107,19 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        alert('Avistamento registrado com sucesso!');
-                        form.reset();
+                        window.location.href = '/success';
                     } else {
                         return response.json().then(data => {
                             console.error('Erro:', data);
                             alert('Erro ao registrar avistamento.');
+                            document.getElementById('message').textContent = 'Erro ao registrar avistamento.';
                         });
                     }
                 })
                 .catch(error => {
                     console.error('Erro:', error);
                     alert('Erro ao registrar avistamento.');
+                    document.getElementById('message').textContent = 'Erro ao registrar avistamento.';
                 });
             });
         });

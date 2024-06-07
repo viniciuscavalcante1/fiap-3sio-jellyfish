@@ -182,3 +182,8 @@ async def get_support(request: Request):
         },
     ]
     return templates.TemplateResponse("support.html", {"request": request, "organizations": organizations})
+
+
+@router.get("/success")
+async def get_success(request: Request):
+    return templates.TemplateResponse("success.html", {"request": request})
