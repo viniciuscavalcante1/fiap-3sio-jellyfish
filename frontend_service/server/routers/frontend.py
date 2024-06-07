@@ -71,7 +71,7 @@ def register_sighting(request: Request):
         raise HTTPException(status_code=401, detail="Não autorizado")
     email_usuario = payload.get("sub")
     context = {'request': request, 'email': email_usuario}
-    return templates.TemplateResponse('register_sighting.html', context)
+    return templates.TemplateResponse('report_threat.html', context)
 
 
 @router.get("/request_rescue")
