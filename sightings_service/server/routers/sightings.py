@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Form, UploadFile, File, HTTPException, Depends, Header
+from fastapi import APIRouter, Form, UploadFile, File, HTTPException
 from ..database import get_db_connection
 from datetime import datetime
 import uuid
@@ -7,12 +7,14 @@ import requests
 
 router = APIRouter()
 
-def verify_token(token: str):
-    response = requests.post("http://localhost:8000/auth/verify_token", data={"token": token})
+AUTH_SERVICE_URL = "http://localhost:8000"
+
+def get_user_id_by_email(email: str):
+    response = requests.post(f"{AUTH_SERVICE_URL}/auth/get_user_id", data={"email": email})
     if response.status_code == 200:
-        return response.json()
+        return response.json()["user_id"]
     else:
-        raise HTTPException(status_code=401, detail="Não autorizado.")
+        raise HTTPException(status_code=response.status_code, detail="User not found")
 
 @router.post("/sightings")
 async def create_sighting(
@@ -21,16 +23,16 @@ async def create_sighting(
     longitude: float = Form(...),
     date_time: datetime = Form(...),
     photo: UploadFile = File(None),
-    authorization: str = Header(...)
+    user_email: str = Form(...)
 ):
-    token = authorization.split(" ")[1]
-    payload = verify_token(token)
-    user_id = payload.get("sub")
+    user_id = get_user_id_by_email(user_email)
 
     photo_url = None
     if photo:
+        photo_directory = "static/photos"
+        os.makedirs(photo_directory, exist_ok=True)
         photo_filename = f"{uuid.uuid4()}.jpg"
-        photo_path = os.path.join("static", "photos", photo_filename)
+        photo_path = os.path.join(photo_directory, photo_filename)
         with open(photo_path, "wb") as f:
             f.write(await photo.read())
         photo_url = f"/static/photos/{photo_filename}"

@@ -1,8 +1,7 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from fastapi import APIRouter, Request, status, Form, HTTPException, Depends
-from fastapi.responses import RedirectResponse
-from starlette.responses import JSONResponse
+from fastapi.responses import RedirectResponse, JSONResponse
 from starlette.templating import Jinja2Templates
 from ..database import get_db_connection
 from ...utils.utils import create_access_token, verify_token
@@ -37,13 +36,14 @@ def autenticar_usuario(email, senha):
 @router.post("/login")
 def login_post(request: Request, email: str = Form(...), senha: str = Form(...)):
     usuario_autenticado, email_usuario = autenticar_usuario(email, senha)
-    # TODO: alterar response
     if usuario_autenticado:
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
             data={"sub": email_usuario}, expires_delta=access_token_expires
         )
-        return JSONResponse(content={"access_token": access_token, "token_type": "bearer"})
+        response = JSONResponse(content={"access_token": access_token, "token_type": "bearer"})
+        response.set_cookie(key="access_token", value=access_token, httponly=True, max_age=ACCESS_TOKEN_EXPIRE_MINUTES*60)
+        return response
     else:
         raise HTTPException(
             status_code=401,
@@ -78,3 +78,17 @@ def verify_token_endpoint(token: str = Form(...)):
         return JSONResponse(content=payload)
     else:
         raise HTTPException(status_code=401, detail="Token inválido")
+
+
+@router.post("/get_user_id")
+def get_user_id(email: str = Form(...)):
+    conn = get_db_connection()
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+    cur.execute("SELECT id FROM users WHERE email = %s", (email,))
+    user = cur.fetchone()
+    cur.close()
+    conn.close()
+    if user:
+        return {"user_id": user["id"]}
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
