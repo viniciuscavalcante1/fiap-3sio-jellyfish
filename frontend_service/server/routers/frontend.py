@@ -3,15 +3,25 @@ from starlette.responses import RedirectResponse
 from starlette.templating import Jinja2Templates
 from requests import post, get
 
+# Configurações para o JWT
 SECRET_KEY = "jellyfish"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
+# Criação do roteador do FastAPI e configuração dos templates
 router = APIRouter()
 templates = Jinja2Templates(directory='templates')
 
-
 def verify_token(token: str):
+    """
+    Verifica a validade de um token JWT enviando-o para o serviço de autenticação.
+
+    Args:
+        token (str): O token JWT a ser verificado.
+
+    Returns:
+        dict or None: O payload do token se válido, caso contrário, None.
+    """
     response = post("http://localhost:8000/auth/verify_token", data={"token": token})
     if response.status_code == 200:
         return response.json()
@@ -20,6 +30,15 @@ def verify_token(token: str):
 
 @router.get("/dashboard")
 def dashboard(request: Request):
+    """
+    Rota para exibir o dashboard do usuário. Verifica a validade do token JWT armazenado nos cookies.
+
+    Args:
+        request (Request): Objeto de requisição do FastAPI.
+
+    Returns:
+        TemplateResponse: Renderiza a página do dashboard.
+    """
     token = request.cookies.get("access_token")
     if not token:
         raise HTTPException(status_code=401, detail="Não autorizado")
@@ -30,20 +49,22 @@ def dashboard(request: Request):
     context = {'request': request, 'email': email_usuario}
     return templates.TemplateResponse('dashboard.html', context)
 
-
 @router.get("/register_sighting")
 def register_sighting_get(request: Request):
-    print("Teste")
+    """
+    Rota para exibir o formulário de registro de avistamentos de vida marinha. Verifica a validade do token JWT.
+
+    Args:
+        request (Request): Objeto de requisição do FastAPI.
+
+    Returns:
+        TemplateResponse: Renderiza a página de registro de avistamentos.
+    """
     token = request.cookies.get("access_token")
-    print(token)
     if not token:
-        print("not token")
         raise HTTPException(status_code=401, detail="Não autorizado")
     payload = verify_token(token.split(" ")[1])
-    print("payload:")
-    print(payload)
     if not payload:
-        print("not payload :(")
         raise HTTPException(status_code=401, detail="Não autorizado")
 
     user_id = payload.get("sub")
@@ -60,9 +81,17 @@ def register_sighting_get(request: Request):
     }
     return templates.TemplateResponse('register_sighting.html', context)
 
-
 @router.get("/report_threat")
-def register_sighting(request: Request):
+def report_threat(request: Request):
+    """
+    Rota para exibir o formulário de reporte de ameaças à vida marinha. Verifica a validade do token JWT.
+
+    Args:
+        request (Request): Objeto de requisição do FastAPI.
+
+    Returns:
+        TemplateResponse: Renderiza a página de reporte de ameaças.
+    """
     token = request.cookies.get("access_token")
     if not token:
         raise HTTPException(status_code=401, detail="Não autorizado")
@@ -73,9 +102,17 @@ def register_sighting(request: Request):
     context = {'request': request, 'email': email_usuario}
     return templates.TemplateResponse('report_threat.html', context)
 
-
 @router.get("/request_rescue")
-def register_sighting(request: Request):
+def request_rescue(request: Request):
+    """
+    Rota para exibir o formulário de solicitação de resgate de animais marinhos. Verifica a validade do token JWT.
+
+    Args:
+        request (Request): Objeto de requisição do FastAPI.
+
+    Returns:
+        TemplateResponse: Renderiza a página de solicitação de resgate.
+    """
     token = request.cookies.get("access_token")
     if not token:
         raise HTTPException(status_code=401, detail="Não autorizado")
@@ -86,15 +123,33 @@ def register_sighting(request: Request):
     context = {'request': request, 'email': email_usuario}
     return templates.TemplateResponse('request_rescue.html', context)
 
-
 @router.get("/login")
 def login_get(request: Request):
+    """
+    Rota para exibir a página de login.
+
+    Args:
+        request (Request): Objeto de requisição do FastAPI.
+
+    Returns:
+        TemplateResponse: Renderiza a página de login.
+    """
     context = {'request': request}
     return templates.TemplateResponse('login.html', context)
 
-
 @router.post("/login")
 def login_post(request: Request, email: str = Form(...), senha: str = Form(...)):
+    """
+    Rota para processar o formulário de login e autenticar o usuário. Define o cookie de token JWT se bem-sucedido.
+
+    Args:
+        request (Request): Objeto de requisição do FastAPI.
+        email (str): O email do usuário.
+        senha (str): A senha do usuário.
+
+    Returns:
+        RedirectResponse: Redireciona para o dashboard se autenticado.
+    """
     response = post("http://localhost:8000/auth/login", data={"email": email, "senha": senha})
     if response.status_code == 200:
         data = response.json()
@@ -109,29 +164,63 @@ def login_post(request: Request, email: str = Form(...), senha: str = Form(...))
             headers={"WWW-Authenticate": "Bearer"}
         )
 
-
 @router.get("/register")
 def register_get(request: Request):
+    """
+    Rota para exibir a página de registro.
+
+    Args:
+        request (Request): Objeto de requisição do FastAPI.
+
+    Returns:
+        TemplateResponse: Renderiza a página de registro.
+    """
     context = {'request': request}
     return templates.TemplateResponse('register.html', context)
 
-
 @router.post("/register")
 def register_post(request: Request, email: str = Form(...), senha: str = Form(...)):
+    """
+    Rota para processar o formulário de registro e criar um novo usuário.
+
+    Args:
+        request (Request): Objeto de requisição do FastAPI.
+        email (str): O email do novo usuário.
+        senha (str): A senha do novo usuário.
+
+    Returns:
+        RedirectResponse: Redireciona para a página de login se bem-sucedido.
+    """
     response = post("http://localhost:8000/auth/register", data={"email": email, "senha": senha})
     if response.status_code == 200:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
     else:
         raise HTTPException(status_code=400, detail="Erro ao registrar usuário")
 
-
 @router.get("/export")
 async def get_export_data(request: Request):
-    return templates.TemplateResponse("export.html", {"request": request})
+    """
+    Rota para exibir a página de exportação de dados.
 
+    Args:
+        request (Request): Objeto de requisição do FastAPI.
+
+    Returns:
+        TemplateResponse: Renderiza a página de exportação de dados.
+    """
+    return templates.TemplateResponse("export.html", {"request": request})
 
 @router.get("/learn")
 async def get_education(request: Request):
+    """
+    Rota para exibir a página de aprendizado com artigos sobre vida marinha.
+
+    Args:
+        request (Request): Objeto de requisição do FastAPI.
+
+    Returns:
+        TemplateResponse: Renderiza a página de aprendizado.
+    """
     articles = [
         {
             "title": "Como identificar os seres marinhos",
@@ -156,9 +245,17 @@ async def get_education(request: Request):
     ]
     return templates.TemplateResponse("learn.html", {"request": request, "articles": articles})
 
-
 @router.get("/support")
 async def get_support(request: Request):
+    """
+    Rota para exibir a página de apoio com links para organizações que defendem a vida marinha.
+
+    Args:
+        request (Request): Objeto de requisição do FastAPI.
+
+    Returns:
+        TemplateResponse: Renderiza a página de apoio.
+    """
     organizations = [
         {
             "name": "A Voz dos Oceanos",
@@ -183,7 +280,15 @@ async def get_support(request: Request):
     ]
     return templates.TemplateResponse("support.html", {"request": request, "organizations": organizations})
 
-
 @router.get("/success")
 async def get_success(request: Request):
+    """
+    Rota para exibir a página de sucesso após uma operação bem-sucedida.
+
+    Args:
+        request (Request): Objeto de requisição do FastAPI.
+
+    Returns:
+        TemplateResponse: Renderiza a página de sucesso.
+    """
     return templates.TemplateResponse("success.html", {"request": request})
