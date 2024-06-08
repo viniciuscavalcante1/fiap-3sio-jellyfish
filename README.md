@@ -2,6 +2,10 @@
 
 # Jellyfish | Global Solution 2024 - RM 86108
 
+## Vídeos no YouTube e links necessários
+Você pode acessar o vídeo pitch [neste link](https://youtu.be/H6mgEdQeqd0) e o vídeo técnico [neste link](https://youtu.be/H6mgEdQeqd0). 
+Pode acessar todos os links úteis com documentações e entregas [neste link](https://github.com/viniciuscavalcante1/fiap-3sio-jellyfish/blob/main/docs/links/links.txt). Eles também estão disponíveis abaixo.
+
 ## Visão geral
 Jellyfish é uma aplicação web simples e rápida para monitoramento e preservação da vida marinha, baseado em geolocalização, coleta de dados e reports.
 O projeto foi desenvolvido para o Global Solution do primeiro semestre de 2024, avaliação global da FIAP, que neste semestre, teve o tema de preservação dos oceanos. 
