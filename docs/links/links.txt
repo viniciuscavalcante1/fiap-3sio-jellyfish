@@ -1,0 +1,35 @@
+Aluno:
+Vinícius de Abreu Cavalcante
+
+RM:
+86108
+
+Link do GitHub com o projeto completo, documentações e todos os links necessários:
+https://github.com/viniciuscavalcante1/fiap-3sio-jellyfish/tree/main
+
+Link do vídeo técnico no YouTube:
+
+
+Link da documentação com escopo, requisitos funcionais e requisitos não funcionais:
+https://github.com/viniciuscavalcante1/fiap-3sio-jellyfish/blob/main/docs/requisitos/requisitos.md
+
+Link da documentação BPMN:
+Pasta Geral:
+https://github.com/viniciuscavalcante1/fiap-3sio-jellyfish/tree/main/docs/bpmn
+BMPN Ameaça:
+https://github.com/viniciuscavalcante1/fiap-3sio-jellyfish/blob/main/docs/bpmn/bpmn_ameaca.svg
+BPMN Autenticação:
+https://github.com/viniciuscavalcante1/fiap-3sio-jellyfish/blob/main/docs/bpmn/bpmn_autenticacao.svg
+BPMN Avistamentos:
+https://github.com/viniciuscavalcante1/fiap-3sio-jellyfish/blob/main/docs/bpmn/bpmn_avistamentos.svg
+BPMN Exportação:
+https://github.com/viniciuscavalcante1/fiap-3sio-jellyfish/blob/main/docs/bpmn/bpmn_exportacao.svg
+BPMN Resgate:
+https://github.com/viniciuscavalcante1/fiap-3sio-jellyfish/blob/main/docs/bpmn/bpmn_resgate.svg
+
+Link do protótipo não funcional no Figma:
+https://www.figma.com/design/ZCzcEoNQTC5eOO8mdAsutm/Untitled?node-id=0-1&t=tzwtaxMuXtuz0gbi-1
+
+Link do protótipo não funcional em PDF:
+https://github.com/viniciuscavalcante1/fiap-3sio-jellyfish/blob/main/docs/prototipo_mockup_wireframe/prototipo.pdf
+
